@@ -28,6 +28,12 @@ module Myapp
     # Only loads a smaller set of middleware suitable for API only apps.
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
+    config.i18n.default_locale = :ja
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+    config.time_zone = 'Tokyo'
+    config.active_record.time_zone_aware_types = %i(datetime time)
+    config.autoload_paths += %W(#{config.root}/app/commands)
+
     config.generators do |g|
       g.javascripts false
       g.stylesheets false
