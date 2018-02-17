@@ -1,5 +1,5 @@
 class DecodeAuthenticationCommand < ApplicationCommand
-  validates :authorization , presence: true
+  validate :token_is_able_to_decode
 
   attr_reader :user
 
@@ -12,13 +12,7 @@ class DecodeAuthenticationCommand < ApplicationCommand
   end
 
   def call
-    return errors.add(:token, :token_missing) if token.nil?
-    return errors.add(:token, :token_expired) if contents.nil?
-    return errors.add(:token, :token_invalid) if user_id.nil?
-  end
-
-  def user
-    @user ||= User.find_by(id: user_id)
+    @user = User.find_by(id: user_id)
   end
 
   def user_id
@@ -29,9 +23,21 @@ class DecodeAuthenticationCommand < ApplicationCommand
     @contents ||= service.decode(token)
   end
 
-  # authorization: e.g. "base xxxxxxxxxxxxxxxxxxxxxx"
-  # return "xxxxxxxxxxxxxxxxxxx"
+  # authorization: "#{key} #{token}"
+  #    e.g. "base xgtstewtgsaee"
+  # you can't use 'Enumerable#last' to 'authorization.split(/\s/)',
+  # because this passes the key to service
+  # and 'JWT::DecodeError: Not enough or too many segments' occurred on service
+  # when authorization is key only.
   def token
     authorization.split(/\s/)[1]
+  end
+
+  def token_is_able_to_decode
+    if authorization.nil? || token.nil?
+      return errors.add(:token, :token_missing)
+    end
+    return errors.add(:token, :token_expired) if contents.nil?
+    return errors.add(:token, :token_invalid) if user_id.nil?
   end
 end
