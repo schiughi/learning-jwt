@@ -1,0 +1,17 @@
+ja:
+  activemodel:
+    models:
+      decode_authentication_command: ユーザー検証コマンド
+    attributes:
+      decode_authentication_command:
+        user: ユーザー
+        authorization: リクエストヘッダ #?
+        token: トークン
+    errors:
+      models:
+        decode_authentication_command:
+          attributes:
+            token:
+              token_missing: が見つかりません。
+              token_expired: の期限が切れています。
+              token_invalid: が不正です

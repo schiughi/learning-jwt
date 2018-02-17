@@ -22,7 +22,7 @@ class AuthenticateCommand < ApplicationCommand
   def contents
     {
       user_id: user.id ,
-      expires: 24.hours.from_now.to_i
+      exp: 24.hours.from_now.to_i
     }
   end
 

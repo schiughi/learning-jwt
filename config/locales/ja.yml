@@ -202,14 +202,3 @@ ja:
       long: "%Y年%m月%d日(%a) %H時%M分%S秒 %z"
       short: "%y/%m/%d %H:%M"
     pm: 午後
-  activemodel:
-    models:
-      authenticate_command: 認証コマンド
-    attributes:
-      authenticate_command:
-        username: ユーザー名
-        password: パスワード
-    errors:
-      messages:
-        unregistered_user: "アカウントを登録してください。"
-        invalid_credentials: "パスワードが一致しません。"

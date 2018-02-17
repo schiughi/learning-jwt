@@ -1,0 +1,12 @@
+ja:
+  activemodel:
+    models:
+      authenticate_command: ユーザー認証コマンド
+    attributes:
+      authenticate_command:
+        username: ユーザー名
+        password: パスワード
+    errors:
+      messages:
+        unregistered_user: "アカウントを登録してください。"
+        invalid_credentials: "パスワードが一致しません。"
