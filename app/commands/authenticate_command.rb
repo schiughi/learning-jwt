@@ -1,7 +1,6 @@
 class AuthenticateCommand < ApplicationCommand
   validates :username , presence: true
   validates :password , presence:true
-  validate :user_must_be_registered
   validate :password_must_correspond_with_users
 
   attr_reader :token
@@ -26,14 +25,12 @@ class AuthenticateCommand < ApplicationCommand
     }
   end
 
-  def user_must_be_registered
-    if user.nil?
-      errors.add(:base, :unregistered_user)
-    end
-  end
-
   def password_must_correspond_with_users
-    unless user.present? && user.authenticate(password)
+    unless user.present?
+      return errors.add(:base, :unregistered_user)
+    end
+
+    unless user.authenticate(password)
       errors.add(:base, :invalid_credentials)
     end
   end
