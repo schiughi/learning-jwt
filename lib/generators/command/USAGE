@@ -1,0 +1,8 @@
+Description:
+    Stubs out a new command.
+
+Example:
+    `rails generate command authenticate`
+
+    This will create:
+        command: app/commands/authenticate_command.rb
