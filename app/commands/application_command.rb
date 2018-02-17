@@ -10,7 +10,11 @@ class ApplicationCommand
 
     def call!(*args)
       new(*args).tap do |command|
-        command.send(:raise_validation_error) if command.valid?
+        if command.valid?
+          command.send(:call)
+        else
+          command.send(:raise_validation_error)
+        end
       end
     end
   end
