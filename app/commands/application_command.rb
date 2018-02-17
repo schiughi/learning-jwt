@@ -33,7 +33,7 @@ class ApplicationCommand
     raise NotImplementedError, "You must implement #{self.class}##{__method__}"
   end
 
-  def raise_validation_error()
+  def raise_validation_error
     raise ActiveRecord::RecordInvalid.new(self)
   end
 end

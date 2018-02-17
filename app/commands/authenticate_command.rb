@@ -1,6 +1,9 @@
 class AuthenticateCommand < ApplicationCommand
   validates :username , presence: true
   validates :password , presence:true
+  validate :user_must_be_registered
+  validate :password_must_correspond_with_users
+
   attr_reader :token
 
   private
@@ -13,25 +16,7 @@ class AuthenticateCommand < ApplicationCommand
   end
 
   def call
-    if unregistered_user?
-      errors.add(:base, :unregistered_user)
-    elsif password_invalid?
-      errors.add(:base, :invalid_credentials)
-    else
-      @token = service.encode(contents)
-    end
-  end
-
-  def user
-    @user ||= User.find_by(username: username)
-  end
-
-  def unregistered_user?
-    user.nil?
-  end
-
-  def password_invalid?
-    not user.authenticate(password)
+    @token = service.encode(contents)
   end
 
   def contents
@@ -39,5 +24,21 @@ class AuthenticateCommand < ApplicationCommand
       user_id: user.id ,
       expires: 24.hours.from_now.to_i
     }
+  end
+
+  def user_must_be_registered
+    if user.nil?
+      errors.add(:base, :unregistered_user)
+    end
+  end
+
+  def password_must_correspond_with_users
+    unless user.present? && user.authenticate(password)
+      errors.add(:base, :invalid_credentials)
+    end
+  end
+
+  def user
+    @user ||= User.find_by(username: username)
   end
 end
