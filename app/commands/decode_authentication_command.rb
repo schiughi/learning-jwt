@@ -3,11 +3,15 @@ class DecodeAuthenticationCommand < ApplicationCommand
 
   attr_reader :user
 
-  private
-  attr_reader :authorization , :service
+  def error_message
+    errors.full_messages.first
+  end
 
-  def initialize(headers, service: JwtService.new)
-    @authorization = headers['Authorization'] if headers.present?
+  private
+  attr_reader :token , :service
+
+  def initialize(token, service: JwtService.new)
+    @token = token
     @service = service
   end
 
@@ -23,12 +27,7 @@ class DecodeAuthenticationCommand < ApplicationCommand
     @contents ||= service.decode(token)
   end
 
-  def token
-    authorization.split(/\s/)[1] if authorization.present?
-  end
-
   def token_is_able_to_decode
-    return errors.add(:token, :token_missing) unless authorization
     return errors.add(:token, :token_missing) unless token
     return errors.add(:token, :token_expired) unless contents
     return errors.add(:token, :token_invalid) unless user_id

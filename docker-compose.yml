@@ -10,7 +10,7 @@ services:
   api:
     build: 
       context: .
-    command: bundle exec rails s
+    command: bundle exec rails s -p 3030 -b '0.0.0.0'
     volumes:
       - .:/myapp
       - bundle_install:/usr/local/bundle
