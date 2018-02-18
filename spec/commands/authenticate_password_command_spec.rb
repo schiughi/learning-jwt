@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe AuthenticateCommand, type: :model do
+RSpec.describe AuthenticatePasswordCommand, type: :model do
   subject { described_class }
   let(:username) { "hoge" }
   let(:password) { "hoge11111" }

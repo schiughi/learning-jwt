@@ -1,4 +1,4 @@
-class AuthenticateCommand < ApplicationCommand
+class AuthenticatePasswordCommand < ApplicationCommand
   validates :username , presence: true
   validates :password , presence:true
   validate :password_must_correspond_with_users
