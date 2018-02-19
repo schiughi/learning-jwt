@@ -7,12 +7,6 @@ RSpec.describe JwtService, type: :model do
   end
   let(:token) { subject.encode(payload) }
 
-  describe "#encode" do
-    it "should equals token" do
-      expect(subject.encode(payload)).to eq token
-    end
-  end
-
   describe "#decode" do
     it "should equals payload" do
       expect(subject.decode(token)).to eq payload
