@@ -5,4 +5,5 @@ Rails.application.routes.draw do
       resources :auths
     end
   end
+  get 'auth/:provider/callback', to: 'api/v1/auths#callback'
 end
