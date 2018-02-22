@@ -1,7 +1,6 @@
 class AuthenticateProviderCommand < ApplicationCommand
   validates :auth, presence: true
-  validate :access_token_required
-  validate :user_name_required
+  validate :auth_hash_value_is_filled
   attr_reader :token
 
   private
@@ -13,25 +12,21 @@ class AuthenticateProviderCommand < ApplicationCommand
   end
 
   def call
-    register_profile unless social_profile.present?
+    register_profile
     encode_token
+  end
+
+  def register_profile
+    user.social_profiles.from_omniauth(auth) unless social_profile.present?
   end
 
   def social_profile
     @social_profile ||= SocialProfile.find_by(provider: auth.provider, uid: auth.uid)
   end
 
-  def register_profile
-    user.social_profiles.from_omniauth(auth)
-  end
-
   def user
     @user ||= social_profile.try(:user)
-    @user ||= User.create_provisional_account(auth_name)
-  end
-
-  def auth_name
-    auth.info['nickname'] || auth.info['name']
+    @user ||= User.create_provisional_account(auth.info['nickname'])
   end
 
   def encode_token
@@ -45,15 +40,8 @@ class AuthenticateProviderCommand < ApplicationCommand
     }
   end
 
-  def access_token_required
-    unless auth && auth_token.present?
-      errors.add(:token, :token_missing)
-    end
-  end
-
-  def user_name_required
-    unless auth && auth_name.present?
-      errors.add(:name, :name_invalid)
-    end
+  def auth_hash_value_is_filled
+    return errors.add(:auth, :invalid) unless auth && auth.credentials.token.present?
+    return errors.add(:auth, :invalid) unless auth && auth.info['nickname'].present?
   end
 end
