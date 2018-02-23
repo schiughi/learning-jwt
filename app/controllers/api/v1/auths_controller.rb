@@ -16,11 +16,17 @@ class Api::V1::AuthsController < ApplicationController
   end
 
   def callback
-    result = AuthenticateProviderCommand.call(request.env["omniauth.auth"])
+    result = AuthenticateProviderCommand.call(auth)
     if result.success?
       render json: { token: result.token }
     else
       render json: { error: result.errors }, status: :unauthorized
     end
+  end
+
+  private
+
+  def auth
+    request.env["omniauth.auth"]
   end
 end
